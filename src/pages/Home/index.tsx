@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import {
   Container,
@@ -7,8 +8,6 @@ import {
   AnimationContainerText,
   AnimationContainerButton,
 } from './styles';
-
-import Button from '../../components/Button';
 
 import logoImg from '../../assets/tech_iz-logo.png';
 
@@ -26,7 +25,7 @@ const Home: React.FC = () => {
       </AnimationContainerText>
 
       <AnimationContainerButton>
-        <Button>Iniciar Jogo</Button>
+        <Link to="/quiz">Iniciar Jogo</Link>
       </AnimationContainerButton>
     </Container>
   );
