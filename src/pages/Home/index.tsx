@@ -25,7 +25,7 @@ const Home: React.FC = () => {
       </AnimationContainerText>
 
       <AnimationContainerButton>
-        <Link to="/quiz">Iniciar Jogo</Link>
+        <Link to="/questions">Iniciar Jogo</Link>
       </AnimationContainerButton>
     </Container>
   );

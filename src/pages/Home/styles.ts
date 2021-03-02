@@ -2,7 +2,6 @@ import styled, { keyframes } from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
-
   padding: 40px 20px;
 `;
 
@@ -76,5 +75,12 @@ export const AnimationContainerButton = styled.div`
 
     border: 0;
     border-radius: 20px;
+
+    transition: transform 0.2s;
+
+    &:hover {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+      transform: scale(105%);
+    }
   }
 `;
