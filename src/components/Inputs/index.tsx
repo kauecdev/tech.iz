@@ -2,14 +2,14 @@ import React, { InputHTMLAttributes } from 'react';
 
 import { Container } from './styles';
 
-type InputProps = InputHTMLAttributes<HTMLInputElement>;
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  isCorrect: boolean;
+}
 
-const Inputs: React.FC<InputProps> = ({ ...rest }) => {
+const Inputs: React.FC<InputProps> = ({ isCorrect, ...rest }) => {
   return (
     <Container>
       <input {...rest} />
-
-      <input type="radio" name="isCorrect" id="isCorrect" />
     </Container>
   );
 };
