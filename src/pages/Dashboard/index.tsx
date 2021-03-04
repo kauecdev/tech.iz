@@ -1,18 +1,37 @@
 import React, { FormEvent, useState, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
+import * as Yup from 'yup';
+
+import { FiHelpCircle } from 'react-icons/fi';
+import api from '../../services/api';
 
 import IAlternative from './Alternative/IAlternative';
 
 import logoImg from '../../assets/tech_iz-logo.png';
 
-import { Container } from './styles';
+import Modal from '../../components/Modal';
+
+import { Container, Help } from './styles';
+
 import Alternative from './Alternative';
+import Input from '../../components/Input';
+
+interface IQuestion {
+  code: number;
+  question: string;
+  answers: [];
+}
 
 const Dashboard: React.FC = () => {
-  const [question, setQuestion] = useState('');
+  const [modal, setModal] = useState(false);
+
+  const [questionText, setQuestionText] = useState('');
 
   const [alternativeText, setAlternativeText] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
+
+  const [error, setError] = useState(false);
+  const [errorText, setErrorText] = useState('');
 
   const [alternatives, setAlternatives] = useState<IAlternative[]>([]);
 
@@ -29,6 +48,9 @@ const Dashboard: React.FC = () => {
           isCorrect,
         };
 
+        setAlternativeText('');
+        setIsCorrect(false);
+        setError(false);
         setAlternatives([...alternatives, alternative]);
       } else if (!isCorrect) {
         const alternative: IAlternative = {
@@ -37,8 +59,15 @@ const Dashboard: React.FC = () => {
           isCorrect,
         };
 
+        setAlternativeText('');
+        setIsCorrect(false);
+        setError(false);
         setAlternatives([...alternatives, alternative]);
       }
+    } else {
+      setError(true);
+      setIsCorrect(false);
+      setErrorText('O texto é necessário');
     }
   }, [alternatives, alternativeText, isCorrect]);
 
@@ -60,29 +89,77 @@ const Dashboard: React.FC = () => {
   );
 
   const handleCreateQuestion = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
+    async (e: FormEvent) => {
+      try {
+        e.preventDefault();
 
-      console.log(alternatives);
+        const schema = Yup.object().shape({
+          questionText: Yup.string().required('O texto é necessário.'),
+        });
+
+        await schema.validate(
+          {
+            questionText,
+          },
+          {
+            abortEarly: false,
+          },
+        );
+
+        await api.post('/questions', { question: questionText });
+
+        const questions = await api.get('/questions');
+
+        const questionId = questions.data.find(
+          (question: IQuestion) => question.question === questionText,
+        );
+
+        alternatives.map(async (alternative) => {
+          const data = {
+            answer: alternative.alternativeText,
+            correct: alternative.isCorrect,
+          };
+
+          api.post(`/questions/${questionId.code}`, data);
+        });
+
+        setQuestionText('');
+        setAlternatives([]);
+        setError(false);
+        setModal(true);
+
+        setTimeout(() => {
+          setModal(false);
+        }, 2500);
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          setError(true);
+          setErrorText(err.errors[0]);
+        }
+      }
     },
-    [alternatives],
+    [questionText, alternatives],
   );
 
   return (
     <Container>
+      <Modal modalOn={modal}>Pergunta e respostas salvas com sucesso!</Modal>
       <img src={logoImg} alt="Tech.iz" width={200} />
 
       <h1>Adicione novas perguntas!</h1>
 
-      <div>
+      <div className="container-form">
         <form onSubmit={handleCreateQuestion}>
           <fieldset>
             <legend>Pergunta:</legend>
-            <input
+            <Input
+              error={error}
+              name="question"
               type="text"
+              errorText={errorText}
               placeholder="Digite aqui a pergunta..."
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
+              value={questionText}
+              onChange={(e) => setQuestionText(e.target.value)}
             />
           </fieldset>
 
@@ -95,8 +172,10 @@ const Dashboard: React.FC = () => {
             </header>
 
             <div>
-              <input
+              <Input
+                error={error}
                 name="alternative"
+                errorText={errorText}
                 type="text"
                 placeholder="Digite aqui a alternativa..."
                 value={alternativeText}
@@ -104,6 +183,7 @@ const Dashboard: React.FC = () => {
               />
 
               <div
+                className="checkbox"
                 onClick={() =>
                   isCorrect ? setIsCorrect(false) : setIsCorrect(true)
                 }
@@ -112,8 +192,12 @@ const Dashboard: React.FC = () => {
                   type="checkbox"
                   name="isCorrect"
                   id="isCorrect"
-                  defaultChecked={isCorrect === true}
+                  checked={isCorrect === true}
                 />
+
+                <Help title="Marque caso seja a alternativa correta">
+                  <FiHelpCircle color="#222222" size={20} />
+                </Help>
               </div>
             </div>
           </fieldset>

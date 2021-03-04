@@ -5,7 +5,7 @@ export const Li = styled.li`
   color: #222222;
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
   margin-bottom: 10px;
@@ -15,11 +15,12 @@ export const Li = styled.li`
   }
 
   div:first-of-type {
+    min-width: 50%;
     width: 50%;
   }
 
   div {
-    padding: 0 20px;
+    padding-right: 20px;
 
     display: flex;
     flex-direction: column;

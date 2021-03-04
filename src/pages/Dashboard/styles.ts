@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
+import Tooltip from '../../components/Tooltip';
+
 export const Container = styled.div`
   width: 100%;
   height: 100%;
-
-  padding: 30px 80px;
 
   display: flex;
   align-items: center;
@@ -12,14 +12,14 @@ export const Container = styled.div`
   flex-direction: column;
 
   img {
-    margin-bottom: 20px;
+    margin: 20px 0;
   }
 
   h1 {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
-  > div {
+  > div.container-form {
     background: #e7e4e4;
     width: 60%;
 
@@ -29,6 +29,7 @@ export const Container = styled.div`
     border-radius: 20px;
 
     padding-bottom: 30px;
+    margin-bottom: 40px;
 
     form {
       display: flex;
@@ -46,16 +47,6 @@ export const Container = styled.div`
           font-size: 30px;
 
           margin-bottom: 20px;
-        }
-
-        input {
-          width: 100%;
-          border: 0;
-          padding: 14px;
-          border-radius: 6px;
-          margin-right: 20px;
-
-          font-size: 18px;
         }
       }
 
@@ -85,15 +76,12 @@ export const Container = styled.div`
         }
 
         div {
-          width: 100%;
           display: flex;
 
-          input[type='text'] {
-            margin-right: 20px;
-          }
-
-          div {
+          div.checkbox {
             width: 60px;
+            margin-left: 20px;
+            position: relative;
 
             input[type='checkbox'] {
               all: unset;
@@ -128,8 +116,15 @@ export const Container = styled.div`
     }
 
     ul {
-      max-width: 80%;
+      width: 80%;
       align-self: center;
     }
   }
+`;
+
+export const Help = styled(Tooltip)`
+  position: absolute;
+
+  right: -8px;
+  top: -8px;
 `;
