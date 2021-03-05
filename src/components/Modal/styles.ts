@@ -1,6 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+interface ContainerProps {
+  type: string;
+}
+
+export const Container = styled.div<ContainerProps>`
   display: none;
   align-items: center;
   justify-content: center;
@@ -25,7 +29,15 @@ export const Container = styled.div`
     width: 300px;
     padding: 40px;
     border-radius: 20px;
-    background-color: #02c934;
+
+    ${(props) =>
+      props.type === 'success'
+        ? css`
+            background-color: #02c934;
+          `
+        : css`
+            background-color: #c53030;
+          `}
 
     svg {
       margin-bottom: 20px;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiTrash2 } from 'react-icons/fi';
 
-import IAlternative from './IAlternative';
+import IAlternative from '../../../utils/IAlternative';
 
 import { Li } from './styles';
 
@@ -18,12 +18,12 @@ const Alternative: React.FC<IAlternativeProps> = ({
     <Li key={alternative.id}>
       <div>
         <strong>Alternativa: </strong>
-        <span>{alternative.alternativeText}</span>
+        <span>{alternative.answer}</span>
       </div>
 
       <div>
         <strong>Alternativa correta: </strong>
-        <span>{alternative.isCorrect ? 'Sim' : 'Não'}</span>
+        <span>{alternative.correct ? 'Sim' : 'Não'}</span>
       </div>
 
       <button

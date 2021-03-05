@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { FiHelpCircle } from 'react-icons/fi';
 import api from '../../services/api';
 
-import IAlternative from './Alternative/IAlternative';
+import IAlternative from '../../utils/IAlternative';
 
 import logoImg from '../../assets/tech_iz-logo.png';
 
@@ -37,15 +37,15 @@ const Dashboard: React.FC = () => {
 
   const addNewAlternativeInput = useCallback(() => {
     const correctAlternative = alternatives.find(
-      (alternative) => alternative.isCorrect === true,
+      (alternative) => alternative.correct === true,
     );
 
     if (alternativeText && alternatives.length < 5) {
       if (!correctAlternative) {
         const alternative: IAlternative = {
           id: uuid(),
-          alternativeText,
-          isCorrect,
+          answer: alternativeText,
+          correct: isCorrect,
         };
 
         setAlternativeText('');
@@ -55,8 +55,8 @@ const Dashboard: React.FC = () => {
       } else if (!isCorrect) {
         const alternative: IAlternative = {
           id: uuid(),
-          alternativeText,
-          isCorrect,
+          answer: alternativeText,
+          correct: isCorrect,
         };
 
         setAlternativeText('');
@@ -116,8 +116,8 @@ const Dashboard: React.FC = () => {
 
         alternatives.map(async (alternative) => {
           const data = {
-            answer: alternative.alternativeText,
-            correct: alternative.isCorrect,
+            answer: alternative.answer,
+            correct: alternative.correct,
           };
 
           api.post(`/questions/${questionId.code}`, data);
@@ -143,7 +143,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container>
-      <Modal modalOn={modal}>Pergunta e respostas salvas com sucesso!</Modal>
+      <Modal type="success" modalOn={modal}>
+        Pergunta e respostas salvas com sucesso!
+      </Modal>
       <img src={logoImg} alt="Tech.iz" width={200} />
 
       <h1>Adicione novas perguntas!</h1>

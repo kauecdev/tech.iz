@@ -1,21 +1,27 @@
 import React, { CSSProperties, HTMLAttributes } from 'react';
-import { FiCheckCircle } from 'react-icons/fi';
+import { FiCheckCircle, FiX } from 'react-icons/fi';
 
 import { Container } from './styles';
 
 interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   modalOn: boolean;
+  type: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ modalOn, children }) => {
+const Modal: React.FC<ModalProps> = ({ modalOn, type, children }) => {
   const modal = {
     display: modalOn ? 'flex' : 'none',
   } as CSSProperties;
 
   return (
-    <Container style={modal}>
+    <Container type={type} style={modal}>
       <div>
-        <FiCheckCircle color="#ffffff" size={40} />
+        {type === 'success' ? (
+          <FiCheckCircle color="#ffffff" size={40} />
+        ) : (
+          <FiX color="#ffffff" size={40} />
+        )}
+
         {children}
       </div>
     </Container>
