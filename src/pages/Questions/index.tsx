@@ -30,9 +30,16 @@ const Questions: React.FC = () => {
   const [questions, setQuestions] = useState<IQuestions[]>([]);
   const [questionText, setQuestionText] = useState('');
   const [alternatives, setAlternatives] = useState<IAlternative[]>([]);
-  const [questionNumber, setQuestionNumber] = useState(1);
+  const [questionNumber, setQuestionNumber] = useState(0);
 
   const [correctQuestion, setCorrectQuestion] = useState(false);
+
+  const shuffleArray = useCallback(
+    (array: Array<IAlternative>): Array<IAlternative> => {
+      return array.sort(() => Math.random() - 0.5);
+    },
+    [],
+  );
 
   useEffect(() => {
     async function fetchQuestionsAndAlternatives(): Promise<void> {
@@ -40,12 +47,15 @@ const Questions: React.FC = () => {
 
       const questionsResponse = response.data;
 
-      const firstQuestionText = questionsResponse[0].question;
-      const firstQuestionAlternatives = questionsResponse[0].answers;
+      const firstQuestionText = questionsResponse[questionNumber].question;
+      const firstQuestionAlternatives =
+        questionsResponse[questionNumber].answers;
+
+      const shuffledAlternatives = shuffleArray(firstQuestionAlternatives);
 
       setQuestions(questionsResponse);
       setQuestionText(firstQuestionText);
-      setAlternatives(firstQuestionAlternatives);
+      setAlternatives(shuffledAlternatives);
     }
     fetchQuestionsAndAlternatives();
   }, []);
@@ -54,10 +64,8 @@ const Questions: React.FC = () => {
     (e) => {
       const alternativeTargetText = e.target.textContent;
 
-      const alternativeTextSpliced = alternativeTargetText.slice(3);
-
       const matchedAlternative = alternatives.find(
-        (alternative) => alternative.answer === alternativeTextSpliced,
+        (alternative) => alternative.answer === alternativeTargetText,
       );
 
       if (matchedAlternative?.correct) {
@@ -73,10 +81,18 @@ const Questions: React.FC = () => {
   );
 
   const handleNextQuestion = useCallback(() => {
-    setCorrectQuestion(false);
-    setQuestionText(questions[1].question);
-    setAlternatives(questions[1].answers);
-  }, [questions]);
+    if (questions[questionNumber + 1] === undefined) {
+      history.push('/congratulations');
+    } else {
+      const shuffledAlternatives = shuffleArray(
+        questions[questionNumber + 1].answers,
+      );
+
+      setCorrectQuestion(false);
+      setQuestionText(questions[questionNumber + 1].question);
+      setAlternatives(shuffledAlternatives);
+    }
+  }, [questions, questionNumber, history, shuffleArray]);
 
   return (
     <Container>
@@ -84,7 +100,7 @@ const Questions: React.FC = () => {
         Você errou! Tente novamente.
       </Modal>
       <QuestionTitle>
-        {questionNumber}. {questionText}
+        {questionNumber + 1}. {questionText}
       </QuestionTitle>
 
       <AlternativesContainer>
@@ -94,7 +110,7 @@ const Questions: React.FC = () => {
               key={alternative.id}
               onClick={verifyCorrectAnswer}
             >
-              <span>a. {alternative.answer}</span>
+              <span>{alternative.answer}</span>
             </QuestionAlternative>
           );
         })}
@@ -110,7 +126,13 @@ const Questions: React.FC = () => {
             <span>
               Parabéns, você acertou! Clique no botão ao lado para continuar.
             </span>
-            <button type="button" onClick={handleNextQuestion}>
+            <button
+              type="button"
+              onClick={() => {
+                setQuestionNumber(questionNumber + 1);
+                handleNextQuestion();
+              }}
+            >
               Avançar
             </button>
           </>

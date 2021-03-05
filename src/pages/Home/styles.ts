@@ -2,7 +2,21 @@ import styled, { keyframes } from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
-  padding: 40px 20px;
+  height: 100vh;
+  padding: 40px 20px 0 20px;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  footer {
+    position: absolute;
+    bottom: 20px;
+
+    text-align: center;
+  }
 `;
 
 export const Title = styled.h1`

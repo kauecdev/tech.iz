@@ -27,6 +27,8 @@ const Home: React.FC = () => {
       <AnimationContainerButton>
         <Link to="/questions">Iniciar Jogo</Link>
       </AnimationContainerButton>
+
+      <footer>Kauê Cavalcante © 2021</footer>
     </Container>
   );
 };
