@@ -58,6 +58,7 @@ const Questions: React.FC = () => {
       setAlternatives(shuffledAlternatives);
     }
     fetchQuestionsAndAlternatives();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const verifyCorrectAnswer = useCallback(

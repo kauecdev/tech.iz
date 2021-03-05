@@ -197,7 +197,10 @@ const Dashboard: React.FC = () => {
                   checked={isCorrect === true}
                 />
 
-                <Help title="Marque caso seja a alternativa correta">
+                <Help
+                  title="Clique no botão caso a alternativa seja a verdadeira!
+                Obs.: Somente uma alternativa pode ser verdadeira."
+                >
                   <FiHelpCircle color="#222222" size={20} />
                 </Help>
               </div>

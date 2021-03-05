@@ -28,8 +28,8 @@ export const Container = styled.div`
 
     border-radius: 20px;
 
-    padding-bottom: 30px;
-    margin-bottom: 40px;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
 
     form {
       display: flex;
